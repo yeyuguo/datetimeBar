@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>jquery-ui-progressbar</title>
+	<!--
+	<link rel="stylesheet" href="//apps.bdimg.com/libs/jqueryui/1.10.4/css/jquery-ui.min.css">
+  <script src="//apps.bdimg.com/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+  -->
+	<link rel="stylesheet" href="./jquery-ui.css">
+	<script src="./jquery-1.12.4.js"></script>
+	<script src="./jquery-ui.js"></script>
+
+	<style type="text/css">
+		#time_slider{width: 100%;border:1px solid #000;background-color: #9d0300;}
+		#amount{height: 20px;}
+	</style>
+</head>
+<body>
+<div id="time_slider"></div>
+<div id="amount"></div>
+<script type="text/javascript">
+		
+		$(function(){
+			var d0 = '2016-08-29 00:00'
+			var d1 = '2016-09-01 00:00'
+
+			var date_diff = dateTime_diff(d0,d1)
+			console.log(date_diff)
+			var date_array = dateArray(d0,d1)
+			slider('#time_slider',0,date_diff-1,function(event,ui){
+				// $( "#amount" ).text( ui.value);
+				$( "#amount" ).text( date_array[ui.value]);
+			})
+		})
+
+
+
+		Date.prototype.Format = function (fmt) {
+	    var o = {
+	        "M+": this.getMonth() + 1, //月份 
+	        "d+": this.getDate(), //日 
+	        "H+": this.getHours(), //小时 
+	        "m+": this.getMinutes(), //分 
+	        "s+": this.getSeconds(), //秒 
+	        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+	        "S": this.getMilliseconds() //毫秒 
+	    };
+	    if (/(y+)/.test(fmt)) {
+	        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    }
+	    for (var k in o)
+	        if (new RegExp("(" + k + ")").test(fmt)) {
+	            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	        }
+	    return fmt;
+		}
+
+
+		Date.prototype.add = function (part, value) {
+    	value *= 1;
+	    if (isNaN(value)) {
+	        value = 0;
+	    }
+	    switch (part) {
+	        case "y":
+	            this.setFullYear(this.getFullYear() + value);
+	            break;
+	        case "m":
+	            this.setMonth(this.getMonth() + value);
+	            break;
+	        case "d":
+	            this.setDate(this.getDate() + value);
+	            break;
+	        case "h":
+	            this.setHours(this.getHours() + value);
+	            break;
+	        case "n":
+	            this.setMinutes(this.getMinutes() + value);
+	            break;
+	        case "s":
+	            this.setSeconds(this.getSeconds() + value);
+	            break;
+	        default:
+	    }
+		}
+
+		/*
+		return hours at the time ...
+		*/
+		function stamp2hour(dateTime){
+			var time = dateTime.split(' ')
+			if (time.length == 2){
+				var stamp = new Date(dateTime).getTime()
+				return stamp/1000/3600
+			}
+		}
+
+		/*
+		return datetime formatter
+		*/
+		function hours2dateTime(hours){
+			var stamp = hours*1000*3600
+			var newdate = new Date(stamp)
+			console.log()
+			return newdate.Format('yyyy-MM-dd HH:mm')
+		}
+		// hours2dateTime(408928)
+
+		/*
+		return hours diffrent
+		*/
+		function dateTime_diff(startDate,endDate){
+			/*
+			date formatter : '2015-12-12 23:59:59'
+			*/
+			var d0 = stamp2hour(startDate)
+			var d1 = stamp2hour(endDate)
+			return (d1-d0)
+		}
+		// console.log(dateTime_diff(d0,d1))
+
+		function slider(obj,min,max,fn){
+			$( obj ).slider({
+			  range: "max",
+			  min: min,
+			  max: max,
+			  value: min,
+			  slide: function( event, ui ) {
+				if(fn){
+					fn(event, ui)
+				}
+				// $( "#amount" ).text( ui.value );
+			  }
+			});
+	    // console.log($( obj ).slider( "value" ))
+		}
+
+		/*
+		return date array about hours
+		*/
+		function dateArray(dateStart,dateEnd){
+			var date_array = []
+			var startHour = stamp2hour(dateStart)
+			var endHour = stamp2hour(dateEnd)
+			for(var i=0;i<(endHour-startHour);i++){
+				date_array.push(String(hours2dateTime(startHour+i)))
+			}
+			return date_array
+		}
+		// console.log(dateArray(d0,d1))
+
+
+</script>
+</body>
+</html>

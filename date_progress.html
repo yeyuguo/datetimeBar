@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='utf-8'>
+    <title>date progress</title>
+    <script src="js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <style type="text/css">
+    #calendar > div{ float: left;}
+    /*#progress-bar-wrapper{padding: 20px 10px;}*/
+    #progress-bar-wrapper{padding: 20px 100px;}
+    /*进度条的样式*/
+    #progress-inset{border-radius: 3px;background-color: rgba(211,211,211,0.42);cursor: pointer;height: 6px;}
+    #progress-line{transition:width ease-in-out 10s;background: #9d0300;height: 6px;border-radius: 3px;position: relative;width: 0px;}
+    /*#progress-line:hover{width: 100%;}*/
+    
+
+    /*实时显示的 日期小时*/
+    #timecode{-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;box-sizing: border-box;color: #fff;cursor: pointer;display: block;font-size: 10px;height: 16px;line-height: normal;margin: 0 0 0 -12px;padding: 0;position: absolute;top: 0;width: 60.984375px;}
+    #timecode-box{box-shadow: 0 0 4px 0 rgba(0,0,0,0.8);-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;background-color: #fff;box-sizing: border-box;color: #000;cursor: -webkit-grab;display: inline-block;font-family: Verdana,sans-serif;font-size: 10px;font-stretch: normal;font-style: normal;font-variant: normal;font-weight: normal;height: 20px;left: -31.5px;line-height: normal;margin: 0 0 0 23px;padding: 2px 4px;position: relative;white-space: nowrap;border-radius: 3px;text-align: center;}
+    .timecode .box {box-shadow: 0 0 4px 0 rgba(0,0,0,0.8);-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;background-color: #fff;box-sizing: border-box;color: #000;cursor: -webkit-grab;display: inline-block;font-family: Verdana,sans-serif;font-size: 10px;font-stretch: normal;font-style: normal;font-variant: normal;font-weight: normal;height: 16px;left: -31.5px;line-height: normal;margin: 0 0 0 23px;padding: 2px 4px;position: relative;white-space: nowrap;border-radius: 3px;text-align: center;}
+    #timecode .box::before {margin-left: -0.2em;bottom: -0.4em;border-left: .4em solid transparent;border-right: .4em solid transparent;border-top: .4em solid #fff;bottom: -0.4em;content: '';left: 20px;margin-left: -0.5em;position: absolute;border-top-color:rgba(0,0,0,0.7);}
+
+    /*鼠标滑动显示的小时数*/
+    #ghost-timecode{-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;box-sizing: border-box;color: #fff;cursor: pointer;display: block;font-size: 10px;height: 16px;line-height: normal;margin: -10px 0 0 -12px;padding: 0;position: absolute;top: 0;width: 60.984375px;transition: opacity linear 250ms;/*opacity: 1;*/}
+	#ghost-timecode .box{color: white;background-color: #9d0300;/*opacity: 0;*/}
+    #ghost-box{width: 40px;box-shadow: 0 0 4px 0 rgba(0,0,0,0.8);-webkit-tap-highlight-color: rgba(0,0,0,0);-webkit-user-select: none;background-color: #fff;box-sizing: border-box;color: #000;cursor: -webkit-grab;display: inline-block;font-family: Verdana,sans-serif;font-size: 10px;font-stretch: normal;font-style: normal;font-variant: normal;font-weight: normal;height: 16px;left: -31.5px;line-height: normal;margin: 0 0 0 23px;padding: 2px 4px;position: relative;white-space: nowrap;border-radius: 3px;text-align: center;
+    }
+    .timecode .loader {visibility: hidden;opacity: 0;transition: visibility 0s linear .5s,opacity .5s linear;content: url("/img/ajax-loader5.gif");z-index: 21;position: relative;left: 3px;top: -30px;}
+    </style>
+</head>
+
+<body>
+    <div id="progress-bar-wrapper" class="">
+        <div id="progress-bar">
+            <div id="progress" style="width: 100%;">
+                <div id="progress-inset">
+                    <div id="progress-line" class="played" style=""></div>
+                    <div id="ghost-timecode" style="opacity: 0; left: 669.333px; margin-top: -25px;">
+                        <div id="ghost-box" class="box">19:00</div>
+                    </div>
+                    <div id="timecode" data-title="D_LT2" class="timecode" title="当地时间" style="left: 600px;">
+                        <div id="timecode-box" class="box">周日 28 - 20:00</div>
+                        	<img class="loader loader-path" width="19" height="8">
+                        </div>
+                </div>
+            </div>
+            <div class="calendar-wrapper">
+                <div class="play" id="playpause" data-name="play"></div>
+                <div id="calendar">
+                    <!--<div data-ts="1471924800000" class="clickable" style="width:10%;">周二 23</div>-->
+                    <!--<div data-ts="1472011200000" class="clickable" style="width:10%;">周三 24</div>-->
+                    <!--<div data-ts="1472097600000" class="clickable" style="width:10%;">周四 25</div>-->
+                    <!--<div data-ts="1472184000000" class="clickable" style="width:10%;">周五 26</div>-->
+                    <!--<div data-ts="1472270400000" class="clickable" style="width:10%;">周六 27</div>-->
+                    <!--<div data-ts="1472356800000" class="clickable" style="width:10%;">周日 28</div>-->
+                    <!--<div style="width:10%;">周一 29</div>-->
+                    <!--<div style="width:10%;">周二 30</div>-->
+                    <!--<div style="width:10%;">周三 31</div>-->
+                    <!--<div style="width:10%;">周四 1</div><b style="left:45.689798101851856px;"></b></div>-->
+            </div>
+        </div>
+    </div>
+    <div style="width:100%;margin-top:30px;">
+        <button class="btn btn-default" id="move">点击移动</button>
+        <button class="btn btn-default" id="stopMove">停止</button>
+        <button class="btn btn-default" id="recover">重置</button>
+    </div>
+    <script type="text/javascript" src="js/progressbar.js"></script>
+    <script type="text/javascript">
+
+    $(function(){
+        var d0 = '2016-08-19 20:00'
+        var d1 = '2016-08-21 00:00'
+        start(d0,d1)
+    })
+    
+    
+    </script>
+</body>
+
+</html>
