@@ -222,20 +222,32 @@ function getDay(d0,d1){
     // var day1 = parseInt(d1.split(' ')[0].split('-')[2])
     var day0 = new Date(d0)
     var day1 = new Date(d1)
-    var day_diff = (day1.getTime()-day0.getTime())/1000/3600/24
 
+    /*相差多少天*/
+    var day_diff = (day1.getTime()-day0.getTime())/1000/3600/24
+    /*日期数组*/
     var date_array = dateArray(d0,d1)
 
 
     for (var j=0;j<day_diff;j++){
         var n = 24 *j;
+        var date = new Date(date_array[n])
+        console.log(date)
         /*星期几*/
-        var weekDay = new Date(date_array[n]).getDay()
+        var weekDay = date.getDay()
         /*多少号*/
-        var Day = new Date(date_array[n]).getDate()
-        // console.log(Day)
+        var Day = date.getDate();
+        /*把周0变成周7*/
         weekDay == 0 ? weekDay=7 : weekDay
-        $('#calendar').append('<div style="width:'+ 1/(day_diff+1)*100 +'%">'+'周'+weekDay+' '+Day+'号</div>')
+        /*添加的 div 的百分比宽度*/
+        var hourss =  date.getHours()
+        console.log(hourss)
+        // var width = 1/(day_diff+1)*100
+        var width = 1/(day_diff)*100
+
+        // var width = 1/(day_diff)*100*(24-hourss)/24
+        // var width = hourss==0 ? 1/(day_diff+1)*100 : 1/(day_diff)*100*(24-hourss)/24
+        $('#calendar').append('<div style="width:'+ width +'%">'+'周'+weekDay+' '+Day+'号</div>')
     }
 }
 
