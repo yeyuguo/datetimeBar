@@ -224,12 +224,18 @@ function getDay(d0,d1){
     var day1 = new Date(d1)
     var day_diff = (day1.getTime()-day0.getTime())/1000/3600/24
 
+    var date_array = dateArray(d0,d1)
 
 
-    console.log(day1-day0)
-    for(var i=day0.getDate();i<day1.getDate();i++){
-        console.log(i)
-        $('#calendar').append('<div style="width:'+ 1/(day_diff+1)*100 +'%">'+i+'号</div>')
+    for (var j=0;j<day_diff;j++){
+        var n = 24 *j;
+        /*星期几*/
+        var weekDay = new Date(date_array[n]).getDay()
+        /*多少号*/
+        var Day = new Date(date_array[n]).getDate()
+        // console.log(Day)
+        weekDay == 0 ? weekDay=7 : weekDay
+        $('#calendar').append('<div style="width:'+ 1/(day_diff+1)*100 +'%">'+'周'+weekDay+' '+Day+'号</div>')
     }
 }
 
